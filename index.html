@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مباريات كأس العالم 2026 - مبنى بلدية بدبا</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Tahoma', 'Arial', sans-serif; min-height: 100vh; color: #fff; position: relative; overflow-x: hidden; }
+
+  .bg-stadium { position: fixed; inset: 0; z-index: 0; background: linear-gradient(160deg, rgba(160,5,20,0.96) 0%, rgba(100,0,10,0.97) 50%, rgba(60,0,5,0.98) 100%); }
+  .bg-stadium::before {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 45%;
+    background: repeating-linear-gradient(90deg, transparent 0px, transparent 58px, rgba(255,255,255,0.03) 58px, rgba(255,255,255,0.03) 60px),
+      linear-gradient(180deg, transparent 0%, rgba(0,60,10,0.35) 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 100%);
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 100%);
+  }
+  .bg-stadium::after { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,255,255,0.018) 30px, rgba(255,255,255,0.018) 31px); }
+  .bg-lights { position: fixed; top: -80px; left: 50%; transform: translateX(-50%); width: 900px; height: 400px; background: conic-gradient(from 260deg at 50% 0%, transparent 0deg, rgba(255,215,0,0.04) 10deg, transparent 20deg, rgba(255,200,0,0.03) 35deg, transparent 45deg, rgba(255,220,0,0.05) 60deg, transparent 75deg, rgba(255,215,0,0.03) 90deg, transparent 100deg); pointer-events: none; z-index: 0; }
+  .bg-glow { position: fixed; top: 30%; left: 50%; transform: translate(-50%,-50%); width: 600px; height: 300px; background: radial-gradient(ellipse, rgba(200,16,46,0.15) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+
+  .page { position: relative; z-index: 1; }
+
+  .top-header { text-align: center; padding: 18px 16px 14px; background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, transparent 100%); border-bottom: 1px solid rgba(255,215,0,0.2); }
+  .wc-logo-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 6px; }
+  .trophy-big { font-size: 36px; filter: drop-shadow(0 0 12px rgba(255,215,0,0.7)); }
+  .wc-titles h1 { font-size: 22px; font-weight: 900; color: #FFD700; text-shadow: 0 0 20px rgba(255,215,0,0.5), 0 2px 6px rgba(0,0,0,0.8); line-height: 1.1; }
+  .wc-titles h2 { font-size: 10px; color: rgba(255,255,255,0.7); letter-spacing: 3px; margin-top: 2px; }
+  .venue-pill { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,165,0,0.15)); border: 1.5px solid rgba(255,215,0,0.45); border-radius: 30px; padding: 5px 16px; margin-top: 8px; font-size: 13px; font-weight: 700; color: #FFD700; }
+  .instruction { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 6px; }
+
+  .day-tabs-wrap { overflow-x: auto; padding: 10px 12px; white-space: nowrap; -webkit-overflow-scrolling: touch; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(255,255,255,0.08); scrollbar-width: none; }
+  .day-tabs-wrap::-webkit-scrollbar { display: none; }
+  .day-tab { display: inline-block; padding: 7px 14px; margin-left: 6px; border-radius: 22px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1.5px solid rgba(255,215,0,0.25); color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.05); transition: all 0.2s; white-space: nowrap; position: relative; }
+  .day-tab:hover { background: rgba(255,215,0,0.12); color: #FFD700; border-color: rgba(255,215,0,0.4); }
+  .day-tab.active { background: linear-gradient(135deg, #FFD700, #FFA500); color: #1a0005; border-color: transparent; box-shadow: 0 3px 14px rgba(255,165,0,0.4); }
+  .day-tab.has-sel::after { content: '✓'; position: absolute; top: -5px; left: -5px; background: #00c853; color: #fff; font-size: 8px; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #1a0005; }
+
+  .main { padding: 14px 14px 100px; }
+  .day-panel { display: none; }
+  .day-panel.active { display: block; }
+  .day-info { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding: 8px 12px; background: rgba(0,0,0,0.3); border-radius: 10px; border: 1px solid rgba(255,215,0,0.15); }
+  .day-info-date { font-size: 13px; font-weight: 700; color: #FFD700; }
+  .day-info-dot { color: rgba(255,255,255,0.3); }
+  .day-info-round { font-size: 10px; color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.07); padding: 2px 8px; border-radius: 10px; }
+
+  .match-card { display: flex; align-items: center; padding: 11px 12px; margin-bottom: 8px; background: rgba(255,255,255,0.055); border-radius: 12px; border: 2px solid rgba(255,255,255,0.07); cursor: pointer; transition: all 0.18s; gap: 8px; user-select: none; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+  .match-card:active { transform: scale(0.98); }
+  .match-card:hover { background: rgba(255,215,0,0.08); border-color: rgba(255,215,0,0.25); }
+  .match-card.selected { background: rgba(255,215,0,0.12); border-color: #FFD700; box-shadow: 0 0 16px rgba(255,215,0,0.2), inset 0 0 20px rgba(255,215,0,0.05); }
+
+  .check-box { width: 24px; height: 24px; border-radius: 7px; border: 2px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; transition: all 0.18s; background: rgba(0,0,0,0.2); }
+  .match-card.selected .check-box { background: #FFD700; border-color: #FFD700; color: #1a0005; box-shadow: 0 0 8px rgba(255,215,0,0.5); }
+
+  .teams { display: flex; align-items: center; gap: 5px; flex: 1; justify-content: center; min-width: 0; }
+  .team-side { display: flex; align-items: center; gap: 5px; flex: 1; min-width: 0; }
+  .team-side.home { flex-direction: row-reverse; }
+  .flag { font-size: 20px; flex-shrink: 0; }
+  .tname { font-size: 12px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .team-side.home .tname { text-align: right; }
+  .vs-pill { background: rgba(200,16,46,0.6); border-radius: 6px; padding: 3px 7px; font-size: 9px; font-weight: 900; color: rgba(255,255,255,0.6); flex-shrink: 0; letter-spacing: 1px; }
+  .match-card.selected .vs-pill { background: rgba(180,120,0,0.5); color: #FFD700; }
+  .time-pill { background: rgba(0,0,0,0.45); border: 1.5px solid rgba(255,215,0,0.35); border-radius: 8px; padding: 4px 8px; font-size: 11px; font-weight: 700; color: #FFD700; flex-shrink: 0; min-width: 50px; text-align: center; }
+  .match-card.selected .time-pill { background: rgba(255,165,0,0.2); border-color: #FFD700; }
+
+  .action-bar { position: fixed; bottom: 0; left: 0; right: 0; padding: 10px 14px 14px; background: linear-gradient(0deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.85) 100%); border-top: 1px solid rgba(255,215,0,0.2); display: flex; gap: 10px; z-index: 50; backdrop-filter: blur(8px); }
+  .btn { flex: 1; padding: 12px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; font-family: 'Tahoma', Arial, sans-serif; transition: all 0.2s; }
+  .btn-preview { background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: #1a0005; box-shadow: 0 4px 18px rgba(255,165,0,0.4); }
+  .btn-reset { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); border: 1.5px solid rgba(255,255,255,0.15); flex: 0.5; }
+
+  .preview-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 200; overflow-y: auto; padding: 60px 16px 30px; align-items: flex-start; justify-content: center; }
+  .preview-overlay.show { display: flex; }
+  .preview-topbar { position: fixed; top: 0; left: 0; right: 0; padding: 10px 14px; background: rgba(0,0,0,0.85); border-bottom: 1px solid rgba(255,215,0,0.2); display: flex; align-items: center; justify-content: space-between; z-index: 201; backdrop-filter: blur(8px); }
+  .preview-topbar .hint { font-size: 11px; color: #FFD700; }
+  .btn-close { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 8px; padding: 6px 14px; font-size: 12px; cursor: pointer; font-family: 'Tahoma', Arial, sans-serif; }
+
+  .share-card { width: 100%; max-width: 440px; border-radius: 20px; overflow: hidden; box-shadow: 0 0 60px rgba(200,16,46,0.4), 0 0 120px rgba(0,0,0,0.6); position: relative; }
+  .sc-bg { position: absolute; inset: 0; background: linear-gradient(160deg, #C8102E 0%, #8B0A1A 40%, #5a0010 100%); z-index: 0; }
+  .sc-bg::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(45deg, transparent, transparent 18px, rgba(255,255,255,0.025) 18px, rgba(255,255,255,0.025) 19px); }
+  .sc-bg::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40%; background: repeating-linear-gradient(90deg, transparent 0px, transparent 38px, rgba(255,255,255,0.04) 38px, rgba(255,255,255,0.04) 40px); mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.6) 100%); -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.6) 100%); }
+  .sc-glow { position: absolute; top: 20%; left: 50%; transform: translate(-50%,-50%); width: 300px; height: 150px; background: radial-gradient(ellipse, rgba(255,215,0,0.08) 0%, transparent 70%); z-index: 0; pointer-events: none; }
+  .sc-content { position: relative; z-index: 1; }
+
+  .sc-header { padding: 16px 16px 10px; text-align: center; background: rgba(0,0,0,0.35); border-bottom: 2px solid rgba(255,215,0,0.4); position: relative; }
+  .sc-fifa-badge { position: absolute; top: 10px; left: 12px; background: rgba(0,0,0,0.55); border: 1.5px solid rgba(255,215,0,0.5); border-radius: 7px; padding: 3px 7px; text-align: center; }
+  .sc-fifa-badge .f1 { font-size: 8px; font-weight: 900; color: #FFD700; letter-spacing: 2px; }
+  .sc-fifa-badge .f2 { font-size: 13px; font-weight: 900; color: #fff; line-height: 1; }
+  .sc-header-row { display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .sc-trophy { font-size: 30px; filter: drop-shadow(0 0 8px rgba(255,215,0,0.7)); }
+  .sc-h1 { font-size: 22px; font-weight: 900; color: #FFD700; text-shadow: 0 0 14px rgba(255,215,0,0.4); }
+  .sc-h2 { font-size: 9px; color: rgba(255,255,255,0.65); letter-spacing: 2px; margin-top: 1px; }
+  .sc-round-badge { display: inline-block; background: linear-gradient(135deg, #FFD700, #FFA500); color: #1a0005; font-size: 13px; font-weight: 900; padding: 4px 20px; border-radius: 16px; margin-top: 6px; box-shadow: 0 2px 10px rgba(255,165,0,0.4); }
+  .sc-date-line { font-size: 9px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+
+  .sc-venue { background: rgba(0,0,0,0.4); border-bottom: 2px solid rgba(255,215,0,0.3); padding: 8px 16px; text-align: center; }
+  .sc-venue-name { font-size: 18px; font-weight: 900; color: #FFD700; text-shadow: 0 0 12px rgba(255,215,0,0.3); }
+  .sc-venue-sub { font-size: 9px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+
+  .sc-matches { padding: 10px 12px 6px; }
+  .sc-date-divider { font-size: 9px; color: #FFD700; font-weight: 700; letter-spacing: 1px; margin: 8px 0 4px; padding: 3px 8px; background: rgba(255,215,0,0.1); border-radius: 6px; display: inline-block; }
+  .sc-match { display: flex; align-items: center; padding: 8px 10px; margin-bottom: 6px; background: rgba(255,255,255,0.08); border-radius: 9px; border: 1px solid rgba(255,255,255,0.1); gap: 5px; }
+  .sc-team { display: flex; align-items: center; gap: 4px; flex: 1; min-width: 0; }
+  .sc-team.home { flex-direction: row-reverse; }
+  .sc-flag { font-size: 18px; flex-shrink: 0; }
+  .sc-tname { font-size: 11px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sc-team.home .sc-tname { text-align: right; }
+  .sc-vs { font-size: 8px; color: rgba(255,255,255,0.3); flex-shrink: 0; font-weight: 700; }
+  .sc-time { background: rgba(100,0,10,0.8); border: 1px solid rgba(255,215,0,0.35); border-radius: 6px; padding: 3px 7px; font-size: 11px; font-weight: 700; color: #FFD700; flex-shrink: 0; min-width: 48px; text-align: center; }
+
+  .sc-food { margin: 6px 12px 10px; background: rgba(0,0,0,0.45); border: 2px solid rgba(255,215,0,0.4); border-radius: 14px; overflow: hidden; }
+  .sc-food-header { background: linear-gradient(135deg, rgba(255,215,0,0.25), rgba(255,165,0,0.15)); border-bottom: 1px solid rgba(255,215,0,0.3); padding: 7px 14px; text-align: center; font-size: 12px; font-weight: 900; color: #FFD700; letter-spacing: 1px; }
+  .sc-food-items { display: flex; padding: 10px 8px; gap: 6px; }
+  .sc-food-item { flex: 1; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px 6px 8px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .sc-food-icon { font-size: 26px; line-height: 1; }
+  .sc-food-label { font-size: 10px; font-weight: 700; color: #fff; }
+  .sc-food-desc { font-size: 8px; color: rgba(255,255,255,0.5); }
+
+  .sc-footer { padding: 8px 16px 14px; text-align: center; border-top: 2px solid rgba(255,215,0,0.25); background: rgba(0,0,0,0.35); }
+  .sc-stars { color: #FFD700; font-size: 11px; letter-spacing: 4px; margin-bottom: 4px; }
+  .sc-tagline { font-size: 13px; font-weight: 900; color: #FFD700; text-shadow: 0 0 10px rgba(255,215,0,0.3); }
+  .sc-sub { font-size: 8px; color: rgba(255,255,255,0.45); margin-top: 3px; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<div class="bg-stadium"></div>
+<div class="bg-lights"></div>
+<div class="bg-glow"></div>
+
+<div class="page">
+  <div class="top-header">
+    <div class="wc-logo-row">
+      <div class="trophy-big">🏆</div>
+      <div class="wc-titles"><h1>كأس العالم 2026</h1><h2>FIFA WORLD CUP 2026</h2></div>
+      <div class="trophy-big">🏆</div>
+    </div>
+    <div class="venue-pill">🏛 مبنى بلدية بدبا</div>
+    <div class="instruction">اختر اليوم ← اضغط المباريات ← معاينة وتصوير ⚽</div>
+  </div>
+
+  <div class="day-tabs-wrap" id="dayTabs"></div>
+  <div class="main" id="mainArea"></div>
+
+  <div class="action-bar">
+    <button class="btn btn-reset" onclick="resetDay()">🗑 إلغاء</button>
+    <button class="btn btn-preview" onclick="showPreview()">📸 معاينة وتصوير</button>
+  </div>
+</div>
+
+<div class="preview-overlay" id="previewOverlay">
+  <div class="preview-topbar">
+    <span class="hint">📸 صوّر البطاقة وشاركها</span>
+    <button class="btn-close" onclick="closePreview()">✕ رجوع</button>
+  </div>
+  <div class="share-card" id="shareCard">
+    <div class="sc-bg"></div>
+    <div class="sc-glow"></div>
+    <div class="sc-content" id="shareCardContent"></div>
+  </div>
+</div>
+
+<script>
+// All times corrected to EEST (Lebanon time) from official schedule
+const allDays = [
+  { date:"11-6-2026", label:"11 يونيو", round:"الجولة الأولى", matches:[
+    { home:"المكسيك", homef:"🇲🇽", away:"جنوب أفريقيا", awayf:"🇿🇦", time:"10 PM" }
+  ]},
+  { date:"12-6-2026", label:"12 يونيو", round:"الجولة الأولى", matches:[
+    { home:"كوريا الجنوبية", homef:"🇰🇷", away:"التشيك", awayf:"🇨🇿", time:"5 AM" },
+    { home:"كندا", homef:"🇨🇦", away:"البوسنة", awayf:"🇧🇦", time:"10 PM" }
+  ]},
+  { date:"13-6-2026", label:"13 يونيو", round:"الجولة الأولى", matches:[
+    { home:"أمريكا", homef:"🇺🇸", away:"باراغواي", awayf:"🇵🇾", time:"4 AM" },
+    { home:"قطر", homef:"🇶🇦", away:"سويسرا", awayf:"🇨🇭", time:"10 PM" }
+  ]},
+  { date:"14-6-2026", label:"14 يونيو", round:"الجولة الأولى", matches:[
+    { home:"البرازيل", homef:"🇧🇷", away:"المغرب", awayf:"🇲🇦", time:"1 AM" },
+    { home:"هايتي", homef:"🇭🇹", away:"اسكتلندا", awayf:"🏴󠁧󠁢󠁳󠁣󠁴󠁿", time:"4 AM" },
+    { home:"أستراليا", homef:"🇦🇺", away:"تركيا", awayf:"🇹🇷", time:"7 AM" },
+    { home:"ألمانيا", homef:"🇩🇪", away:"كوراساو", awayf:"🇨🇼", time:"8 PM" },
+    { home:"هولندا", homef:"🇳🇱", away:"اليابان", awayf:"🇯🇵", time:"11 PM" }
+  ]},
+  { date:"15-6-2026", label:"15 يونيو", round:"الجولة الأولى", matches:[
+    { home:"ساحل العاج", homef:"🇨🇮", away:"الإكوادور", awayf:"🇪🇨", time:"2 AM" },
+    { home:"السويد", homef:"🇸🇪", away:"تونس", awayf:"🇹🇳", time:"5 AM" },
+    { home:"إسبانيا", homef:"🇪🇸", away:"الرأس الأخضر", awayf:"🇲🇷", time:"7 PM" },
+    { home:"بلجيكا", homef:"🇧🇪", away:"مصر", awayf:"🇪🇬", time:"10 PM" }
+  ]},
+  { date:"16-6-2026", label:"16 يونيو", round:"الجولة الأولى", matches:[
+    { home:"السعودية", homef:"🇸🇦", away:"أوروغواي", awayf:"🇺🇾", time:"1 AM" },
+    { home:"إيران", homef:"🇮🇷", away:"نيوزيلندا", awayf:"🇳🇿", time:"4 AM" },
+    { home:"فرنسا", homef:"🇫🇷", away:"السنغال", awayf:"🇸🇳", time:"10 PM" }
+  ]},
+  { date:"17-6-2026", label:"17 يونيو", round:"الجولة الأولى", matches:[
+    { home:"العراق", homef:"🇮🇶", away:"النرويج", awayf:"🇳🇴", time:"1 AM" },
+    { home:"الأرجنتين", homef:"🇦🇷", away:"الجزائر", awayf:"🇩🇿", time:"4 AM" },
+    { home:"النمسا", homef:"🇦🇹", away:"الأردن", awayf:"🇯🇴", time:"7 AM" },
+    { home:"البرتغال", homef:"🇵🇹", away:"الكونغو", awayf:"🇨🇩", time:"8 PM" },
+    { home:"إنجلترا", homef:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", away:"كرواتيا", awayf:"🇭🇷", time:"11 PM" }
+  ]},
+  { date:"18-6-2026", label:"18 يونيو", round:"ج١ + ج٢", matches:[
+    { home:"غانا", homef:"🇬🇭", away:"بنما", awayf:"🇵🇦", time:"2 AM" },
+    { home:"أوزبكستان", homef:"🇺🇿", away:"كولومبيا", awayf:"🇨🇴", time:"5 AM" },
+    { home:"التشيك", homef:"🇨🇿", away:"جنوب أفريقيا", awayf:"🇿🇦", time:"7 PM" },
+    { home:"سويسرا", homef:"🇨🇭", away:"البوسنة", awayf:"🇧🇦", time:"10 PM" }
+  ]},
+  { date:"19-6-2026", label:"19 يونيو", round:"الجولة الثانية", matches:[
+    { home:"كندا", homef:"🇨🇦", away:"قطر", awayf:"🇶🇦", time:"1 AM" },
+    { home:"المكسيك", homef:"🇲🇽", away:"كوريا الجنوبية", awayf:"🇰🇷", time:"4 AM" },
+    { home:"أمريكا", homef:"🇺🇸", away:"أستراليا", awayf:"🇦🇺", time:"10 PM" }
+  ]},
+  { date:"20-6-2026", label:"20 يونيو", round:"الجولة الثانية", matches:[
+    { home:"اسكتلندا", homef:"🏴󠁧󠁢󠁳󠁣󠁴󠁿", away:"المغرب", awayf:"🇲🇦", time:"1 AM" },
+    { home:"البرازيل", homef:"🇧🇷", away:"هايتي", awayf:"🇭🇹", time:"3:30 AM" },
+    { home:"تركيا", homef:"🇹🇷", away:"باراغواي", awayf:"🇵🇾", time:"6 AM" },
+    { home:"هولندا", homef:"🇳🇱", away:"السويد", awayf:"🇸🇪", time:"8 PM" },
+    { home:"ألمانيا", homef:"🇩🇪", away:"ساحل العاج", awayf:"🇨🇮", time:"11 PM" }
+  ]},
+  { date:"21-6-2026", label:"21 يونيو", round:"الجولة الثانية", matches:[
+    { home:"الإكوادور", homef:"🇪🇨", away:"كوراساو", awayf:"🇨🇼", time:"3 AM" },
+    { home:"تونس", homef:"🇹🇳", away:"اليابان", awayf:"🇯🇵", time:"7 AM" },
+    { home:"إسبانيا", homef:"🇪🇸", away:"السعودية", awayf:"🇸🇦", time:"7 PM" },
+    { home:"بلجيكا", homef:"🇧🇪", away:"إيران", awayf:"🇮🇷", time:"10 PM" }
+  ]},
+  { date:"22-6-2026", label:"22 يونيو", round:"الجولة الثانية", matches:[
+    { home:"أوروغواي", homef:"🇺🇾", away:"الرأس الأخضر", awayf:"🇲🇷", time:"1 AM" },
+    { home:"نيوزيلندا", homef:"🇳🇿", away:"مصر", awayf:"🇪🇬", time:"4 AM" },
+    { home:"الأرجنتين", homef:"🇦🇷", away:"النمسا", awayf:"🇦🇹", time:"8 PM" }
+  ]},
+  { date:"23-6-2026", label:"23 يونيو", round:"الجولة الثانية", matches:[
+    { home:"فرنسا", homef:"🇫🇷", away:"العراق", awayf:"🇮🇶", time:"12 AM" },
+    { home:"النرويج", homef:"🇳🇴", away:"السنغال", awayf:"🇸🇳", time:"3 AM" }
+  ]},
+  { date:"24-6-2026", label:"24 يونيو", round:"ج٢ + ج٣", matches:[
+    { home:"بنما", homef:"🇵🇦", away:"كرواتيا", awayf:"🇭🇷", time:"2 AM" },
+    { home:"كولومبيا", homef:"🇨🇴", away:"الكونغو", awayf:"🇨🇩", time:"5 AM" },
+    { home:"سويسرا", homef:"🇨🇭", away:"كندا", awayf:"🇨🇦", time:"10 PM" },
+    { home:"البوسنة", homef:"🇧🇦", away:"قطر", awayf:"🇶🇦", time:"10 PM" }
+  ]},
+  { date:"25-6-2026", label:"25 يونيو", round:"الجولة الثالثة", matches:[
+    { home:"اسكتلندا", homef:"🏴󠁧󠁢󠁳󠁣󠁴󠁿", away:"البرازيل", awayf:"🇧🇷", time:"1 AM" },
+    { home:"المغرب", homef:"🇲🇦", away:"هايتي", awayf:"🇭🇹", time:"1 AM" },
+    { home:"التشيك", homef:"🇨🇿", away:"المكسيك", awayf:"🇲🇽", time:"4 AM" },
+    { home:"جنوب أفريقيا", homef:"🇿🇦", away:"كوريا الجنوبية", awayf:"🇰🇷", time:"4 AM" },
+    { home:"كوراساو", homef:"🇨🇼", away:"ساحل العاج", awayf:"🇨🇮", time:"11 PM" },
+    { home:"الإكوادور", homef:"🇪🇨", away:"ألمانيا", awayf:"🇩🇪", time:"11 PM" }
+  ]},
+  { date:"26-6-2026", label:"26 يونيو", round:"الجولة الثالثة", matches:[
+    { home:"اليابان", homef:"🇯🇵", away:"السويد", awayf:"🇸🇪", time:"2 AM" },
+    { home:"تونس", homef:"🇹🇳", away:"هولندا", awayf:"🇳🇱", time:"2 AM" },
+    { home:"تركيا", homef:"🇹🇷", away:"أمريكا", awayf:"🇺🇸", time:"5 AM" },
+    { home:"باراغواي", homef:"🇵🇾", away:"أستراليا", awayf:"🇦🇺", time:"5 AM" },
+    { home:"النرويج", homef:"🇳🇴", away:"فرنسا", awayf:"🇫🇷", time:"10 PM" },
+    { home:"السنغال", homef:"🇸🇳", away:"العراق", awayf:"🇮🇶", time:"10 PM" }
+  ]},
+  { date:"27-6-2026", label:"27 يونيو", round:"الجولة الثالثة", matches:[
+    { home:"الرأس الأخضر", homef:"🇲🇷", away:"السعودية", awayf:"🇸🇦", time:"3 AM" },
+    { home:"أوروغواي", homef:"🇺🇾", away:"إسبانيا", awayf:"🇪🇸", time:"3 AM" },
+    { home:"مصر", homef:"🇪🇬", away:"إيران", awayf:"🇮🇷", time:"6 AM" },
+    { home:"نيوزيلندا", homef:"🇳🇿", away:"بلجيكا", awayf:"🇧🇪", time:"6 AM" }
+  ]},
+  { date:"28-6-2026", label:"28 يونيو", round:"الجولة الثالثة", matches:[
+    { home:"بنما", homef:"🇵🇦", away:"إنجلترا", awayf:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", time:"12 AM" },
+    { home:"كرواتيا", homef:"🇭🇷", away:"غانا", awayf:"🇬🇭", time:"12 AM" },
+    { home:"كولومبيا", homef:"🇨🇴", away:"البرتغال", awayf:"🇵🇹", time:"2:30 AM" },
+    { home:"الكونغو", homef:"🇨🇩", away:"أوزبكستان", awayf:"🇺🇿", time:"2:30 AM" },
+    { home:"الجزائر", homef:"🇩🇿", away:"النمسا", awayf:"🇦🇹", time:"5 AM" },
+    { home:"الأردن", homef:"🇯🇴", away:"الأرجنتين", awayf:"🇦🇷", time:"5 AM" }
+  ]}
+];
+
+let selectedDay = 0;
+const selected = {};
+allDays.forEach(d => { selected[d.date] = new Set(); });
+
+function renderTabs() {
+  document.getElementById('dayTabs').innerHTML = allDays.map((d,i) => {
+    const hasSel = selected[d.date].size > 0;
+    return `<div class="day-tab ${i===selectedDay?'active':''} ${hasSel?'has-sel':''}" onclick="switchDay(${i})">${d.label}</div>`;
+  }).join('');
+}
+
+function renderMain() {
+  document.getElementById('mainArea').innerHTML = allDays.map((day,di) => {
+    const cards = day.matches.map((m,mi) => {
+      const sel = selected[day.date].has(mi);
+      return `<div class="match-card ${sel?'selected':''}" onclick="toggleMatch('${day.date}',${mi},${di})">
+        <div class="check-box">${sel?'✓':''}</div>
+        <div class="teams">
+          <div class="team-side home"><span class="flag">${m.homef}</span><span class="tname">${m.home}</span></div>
+          <div class="vs-pill">VS</div>
+          <div class="team-side away"><span class="flag">${m.awayf}</span><span class="tname">${m.away}</span></div>
+        </div>
+        <div class="time-pill">${m.time}</div>
+      </div>`;
+    }).join('');
+    return `<div class="day-panel ${di===selectedDay?'active':''}" id="panel-${di}">
+      <div class="day-info">
+        <span class="day-info-date">📅 ${day.date}</span>
+        <span class="day-info-dot">•</span>
+        <span class="day-info-round">${day.round}</span>
+      </div>${cards}</div>`;
+  }).join('');
+}
+
+function switchDay(i) {
+  selectedDay = i;
+  renderTabs();
+  document.querySelectorAll('.day-panel').forEach((p,pi) => p.classList.toggle('active', pi===i));
+}
+
+function toggleMatch(date, mi, di) {
+  if (selected[date].has(mi)) selected[date].delete(mi);
+  else selected[date].add(mi);
+  const cards = document.getElementById(`panel-${di}`).querySelectorAll('.match-card');
+  const sel = selected[date].has(mi);
+  cards[mi].classList.toggle('selected', sel);
+  cards[mi].querySelector('.check-box').textContent = sel ? '✓' : '';
+  renderTabs();
+}
+
+function resetDay() {
+  selected[allDays[selectedDay].date].clear();
+  renderMain(); renderTabs();
+}
+
+function showPreview() {
+  const daysWithGames = allDays.filter(d => selected[d.date].size > 0);
+  if (!daysWithGames.length) { alert('اختر مباراة واحدة على الأقل!'); return; }
+
+  let matchesHtml = '';
+  daysWithGames.forEach(day => {
+    const sel = [...selected[day.date]].sort((a,b)=>a-b).map(mi => day.matches[mi]);
+    if (daysWithGames.length > 1)
+      matchesHtml += `<div class="sc-date-divider">📅 ${day.date}</div>`;
+    sel.forEach(m => {
+      matchesHtml += `<div class="sc-match">
+        <div class="sc-team home"><span class="sc-flag">${m.homef}</span><span class="sc-tname">${m.home}</span></div>
+        <span class="sc-vs">vs</span>
+        <div class="sc-team away"><span class="sc-flag">${m.awayf}</span><span class="sc-tname">${m.away}</span></div>
+        <div class="sc-time">${m.time}</div>
+      </div>`;
+    });
+  });
+
+  const rounds = [...new Set(daysWithGames.map(d => d.round))].join(' | ');
+  const dateLabel = daysWithGames.length === 1
+    ? `📅 ${daysWithGames[0].date}`
+    : `📅 ${daysWithGames[0].date} – ${daysWithGames[daysWithGames.length-1].date}`;
+
+  document.getElementById('shareCardContent').innerHTML = `
+    <div class="sc-header">
+      <div class="sc-fifa-badge"><div class="f1">FIFA</div><div class="f2">2026</div></div>
+      <div class="sc-header-row">
+        <span class="sc-trophy">🏆</span>
+        <div><div class="sc-h1">كأس العالم 2026</div><div class="sc-h2">FIFA WORLD CUP 2026</div></div>
+        <span class="sc-trophy">🏆</span>
+      </div>
+      <div class="sc-round-badge">⚽ ${rounds} ⚽</div>
+      <div class="sc-date-line">${dateLabel}</div>
+    </div>
+    <div class="sc-venue">
+      <div class="sc-venue-name">🏛 مبنى بلدية بدبا 🏛</div>
+      <div class="sc-venue-sub">سنبث المباريات التالية — تعال وشجّع معنا!</div>
+    </div>
+    <div class="sc-matches">${matchesHtml}</div>
+    <div class="sc-food">
+      <div class="sc-food-header">🍽 متوفر للبيع خلال المباريات</div>
+      <div class="sc-food-items">
+        <div class="sc-food-item"><div class="sc-food-icon">💧</div><div class="sc-food-label">مياه</div><div class="sc-food-desc">مياه معدنية باردة</div></div>
+        <div class="sc-food-item"><div class="sc-food-icon">🥤</div><div class="sc-food-label">مشروبات</div><div class="sc-food-desc">مشروبات غازية</div></div>
+        <div class="sc-food-item"><div class="sc-food-icon">🍔</div><div class="sc-food-label">أكل وسناكس</div><div class="sc-food-desc">وجبات وسناكس</div></div>
+      </div>
+    </div>
+    <div class="sc-footer">
+      <div class="sc-stars">⭐ ⭐ ⭐ ⭐ ⭐</div>
+      <div class="sc-tagline">⚽ تعال وشجّع مع الأصحاب! ⚽</div>
+      <div class="sc-sub">مبنى بلدية بدبا • كأس العالم FIFA 2026</div>
+    </div>`;
+
+  document.getElementById('previewOverlay').classList.add('show');
+  document.getElementById('previewOverlay').scrollTop = 0;
+}
+
+function closePreview() {
+  document.getElementById('previewOverlay').classList.remove('show');
+}
+
+renderTabs();
+renderMain();
+</script>
+</body>
+</html>
